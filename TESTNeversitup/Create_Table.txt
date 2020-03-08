@@ -1,0 +1,38 @@
+﻿create table product_master
+(
+product_id varchar(30) PRIMARY KEY,
+product_name_th varchar(30),
+product_name_en varchar(30),
+product_price number(11,2)
+);
+
+create table user_profile
+(
+first_name varchar(30),
+last_name varchar(30),
+mail varchar(30),
+user_id varchar(30) PRIMARY KEY,
+password varchar(100),
+address varchar(100),
+phone varchar(50)
+);
+
+create table order_header
+(
+order_no int,
+order_status varchar(30),
+created_by varchar(30)
+);
+
+create table order_detail
+(
+order_no int,
+item_no int,
+product_id varchar(30),
+qty number(11,2),
+amount number(11,2),
+total_amount number(11,2),
+vat number(11,2),
+);
+
+
