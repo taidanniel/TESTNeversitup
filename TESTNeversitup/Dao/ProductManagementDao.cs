@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
+using Npgsql;
 using TESTNeversitup.Models;
 
 namespace TESTNeversitup.Dao
@@ -18,13 +19,13 @@ namespace TESTNeversitup.Dao
             List<ProductMaster> list_product = new List<ProductMaster>();
             try
             {
-                using (SqlConnection connection = new SqlConnection(Connection.Connection_String))
+                using (NpgsqlConnection connection = new NpgsqlConnection(Connection.Connection_String))
                 {
                     connection.Open();
-                    SqlCommand command = connection.CreateCommand();
+                    NpgsqlCommand command = connection.CreateCommand();
                     string sql = "select * from product_master";
                     command.CommandText = sql;
-                    SqlDataReader dr = command.ExecuteReader();
+                    NpgsqlDataReader dr = command.ExecuteReader();
                     while (dr.Read())
                     {
 
@@ -52,13 +53,13 @@ namespace TESTNeversitup.Dao
             ProductMaster product = null;
             try
             {
-                using (SqlConnection connection = new SqlConnection(Connection.Connection_String))
+                using (NpgsqlConnection connection = new NpgsqlConnection(Connection.Connection_String))
                 {
                     connection.Open();
-                    SqlCommand command = connection.CreateCommand();
+                    NpgsqlCommand command = connection.CreateCommand();
                     string sql = string.Format("select * from product_master where product_id = '{0}'", id);
                     command.CommandText = sql;
-                    SqlDataReader dr = command.ExecuteReader();
+                    NpgsqlDataReader dr = command.ExecuteReader();
                     while (dr.Read())
                     {
                         product = new ProductMaster()
@@ -83,10 +84,10 @@ namespace TESTNeversitup.Dao
         {
             try
             {
-                using (SqlConnection connection = new SqlConnection(Connection.Connection_String))
+                using (NpgsqlConnection connection = new NpgsqlConnection(Connection.Connection_String))
                 {
                     connection.Open();
-                    SqlCommand command = connection.CreateCommand();
+                    NpgsqlCommand command = connection.CreateCommand();
                     string sql = string.Format("delete from product_master where product_id = '{0}'", id);
                     command.CommandText = sql;
                     command.ExecuteNonQuery();
@@ -108,10 +109,10 @@ namespace TESTNeversitup.Dao
         {
             try
             {
-                using (SqlConnection connection = new SqlConnection(Connection.Connection_String))
+                using (NpgsqlConnection connection = new NpgsqlConnection(Connection.Connection_String))
                 {
                     connection.Open();
-                    SqlCommand command = connection.CreateCommand();
+                    NpgsqlCommand command = connection.CreateCommand();
                     string sql = string.Format(@"update product_master set
                                                  product_name_th = '{0}',
                                                  product_name_en = '{1}',
@@ -141,10 +142,10 @@ namespace TESTNeversitup.Dao
         {
             try
             {
-                using (SqlConnection connection = new SqlConnection(Connection.Connection_String))
+                using (NpgsqlConnection connection = new NpgsqlConnection(Connection.Connection_String))
                 {
                     connection.Open();
-                    SqlCommand command = connection.CreateCommand();
+                    NpgsqlCommand command = connection.CreateCommand();
                     string sql = string.Format(@"insert into product_master values ('{0}','{1}','{2}',{3})"
                                                  , product.Product_ID
                                                  , product.Product_Name_TH

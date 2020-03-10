@@ -3,7 +3,7 @@
 product_id varchar(30) PRIMARY KEY,
 product_name_th varchar(30),
 product_name_en varchar(30),
-product_price number(11,2)
+product_price NUMERIC(11,2)
 );
 
 create table user_profile
@@ -29,10 +29,10 @@ create table order_detail
 order_no int,
 item_no int,
 product_id varchar(30),
-qty number(11,2),
-amount number(11,2),
-total_amount number(11,2),
-vat number(11,2),
+qty NUMERIC(11,2),
+amount NUMERIC(11,2),
+total_amount NUMERIC(11,2),
+vat NUMERIC(11,2)
 );
 
 

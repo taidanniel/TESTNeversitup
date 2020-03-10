@@ -13,12 +13,20 @@ namespace TESTNeversitup.Controllers
     {
         private AuthenticationService authen_service = new AuthenticationService();
 
+        /// <summary>
+        /// Register User.
+        /// </summary>
+        /// <param name="user_profile">User Profile Data.</param>
         [HttpPost]
         public IHttpActionResult Register(UserProfile user_profile)
         {
             return Ok(authen_service.Register(user_profile));
         }
 
+        /// <summary>
+        /// Log In.
+        /// </summary>
+        /// <param name="data">Log In Data</param>
         [HttpPost]
         public IHttpActionResult Login(Login data)
         {

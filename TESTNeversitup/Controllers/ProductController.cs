@@ -13,35 +13,56 @@ namespace TESTNeversitup.Controllers
     {
        private ProductManagementService product_service = new ProductManagementService();
 
+        /// <summary>
+        /// Add New  Product.
+        /// </summary>
+        /// <param name="product">Product Data</param>
         [HttpPost]
         public IHttpActionResult AddNewProduct(ProductMaster product)
         {
             return Ok(product_service.AddNewProduct(product));
         }
 
+        /// <summary>
+        ///  Update Product.
+        /// </summary>
+        /// <param name="product">Product Data</param>
         [HttpPost]
         public IHttpActionResult UpdateProduct(ProductMaster product)
         {
             return Ok(product_service.UpdateProduct(product));
         }
 
+        /// <summary>
+        ///  Delate Product.
+        /// </summary>
+        /// <param name="product_id">Product ID</param>
         public IHttpActionResult DeleteProduct(string product_id)
         {
             return Ok(product_service.DeleteProduct(product_id));
         }
 
+        /// <summary>
+        ///  Get Product By ID.
+        /// </summary>
+        /// <param name="product_id">Product ID</param>
         public IHttpActionResult GetProductByID(string product_id)
         {
             return Ok(product_service.GetProductByID(product_id));
         }
 
+        /// <summary>
+        ///  Get All Product Data.
+        /// </summary>
         public IHttpActionResult GetProductAll()
         {
             return Ok(product_service.GetProductAll());
         }
 
 
-        //This Method return only column product_id 
+        /// <summary>
+        ///  Get All Product ID Only.
+        /// </summary>
         public IHttpActionResult GetProductIDAll()
         {
             List<ProductMaster> list_product = product_service.GetProductAll();

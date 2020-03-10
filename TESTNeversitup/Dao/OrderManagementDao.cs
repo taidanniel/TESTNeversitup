@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
+using Npgsql;
 using TESTNeversitup.Models;
 
 namespace TESTNeversitup.Dao
@@ -18,13 +19,13 @@ namespace TESTNeversitup.Dao
             List<OrderHeader> list_order = new List<OrderHeader>();
             try
             {
-                using (SqlConnection connection = new SqlConnection(Connection.Connection_String))
+                using (NpgsqlConnection connection = new NpgsqlConnection(Connection.Connection_String))
                 {
                     connection.Open();
-                    SqlCommand command = connection.CreateCommand();
+                    NpgsqlCommand command = connection.CreateCommand();
                     string sql = string.Format("select * from order_header where created_by = '{0}'", user_id);
                     command.CommandText = sql;
-                    SqlDataReader dr = command.ExecuteReader();
+                    NpgsqlDataReader dr = command.ExecuteReader();
                     while (dr.Read())
                     {
                         order_header = new OrderHeader()
@@ -50,13 +51,13 @@ namespace TESTNeversitup.Dao
             List<OrderHeader> list_order = new List<OrderHeader>();
             try
             {
-                using (SqlConnection connection = new SqlConnection(Connection.Connection_String))
+                using (NpgsqlConnection connection = new NpgsqlConnection(Connection.Connection_String))
                 {
                     connection.Open();
-                    SqlCommand command = connection.CreateCommand();
+                    NpgsqlCommand command = connection.CreateCommand();
                     string sql = "select * from order_header";
                     command.CommandText = sql;
-                    SqlDataReader dr = command.ExecuteReader();
+                    NpgsqlDataReader dr = command.ExecuteReader();
                     while (dr.Read())
                     {
                         order_header = new OrderHeader()
@@ -82,13 +83,13 @@ namespace TESTNeversitup.Dao
             List<OrderDetail> list_detail = new List<OrderDetail>();
             try
             {
-                using (SqlConnection connection = new SqlConnection(Connection.Connection_String))
+                using (NpgsqlConnection connection = new NpgsqlConnection(Connection.Connection_String))
                 {
                     connection.Open();
-                    SqlCommand command = connection.CreateCommand();
+                    NpgsqlCommand command = connection.CreateCommand();
                     string sql = string.Format("select * from order_detail where order_no = {0}", order_no);
                     command.CommandText = sql;
-                    SqlDataReader dr = command.ExecuteReader();
+                    NpgsqlDataReader dr = command.ExecuteReader();
                     while (dr.Read())
                     {
                         order_detail = new OrderDetail()
@@ -116,10 +117,10 @@ namespace TESTNeversitup.Dao
         {
             try
             {
-                using (SqlConnection connection = new SqlConnection(Connection.Connection_String))
+                using (NpgsqlConnection connection = new NpgsqlConnection(Connection.Connection_String))
                 {
                     connection.Open();
-                    SqlCommand command = connection.CreateCommand();
+                    NpgsqlCommand command = connection.CreateCommand();
                     string sql = string.Format(@"update order_header set
                                                  order_status = 'Cancel'
                                                  where order_no = {0}", order_no);
@@ -145,13 +146,13 @@ namespace TESTNeversitup.Dao
             order.Order_No = random.Next(1000);
             try
             {
-                using (SqlConnection connection = new SqlConnection(Connection.Connection_String))
+                using (NpgsqlConnection connection = new NpgsqlConnection(Connection.Connection_String))
                 {
                     connection.Open();
-                    SqlCommand command = connection.CreateCommand();
-                    string sql = string.Format(@"insert into order_header values({0},'Create',{1})", order.Order_No, order.Created_by);
-                    SqlTransaction transaction;
-                    transaction = connection.BeginTransaction("SampleTransaction");
+                    NpgsqlCommand command = connection.CreateCommand();
+                    string sql = string.Format(@"insert into order_header values({0},'New','{1}')", order.Order_No, order.Created_by);
+                    NpgsqlTransaction transaction;
+                    transaction = connection.BeginTransaction();
                     command.Connection = connection;
                     command.Transaction = transaction;
                     command.CommandText = sql;
@@ -160,6 +161,8 @@ namespace TESTNeversitup.Dao
                         command.ExecuteNonQuery();
                         for (int i = 0; i < order.Details.Count; i++)
                         {
+                            command = connection.CreateCommand();
+                            command.Transaction = transaction;
                             sql = string.Format(@"insert into order_detail values({0},{1},'{2}',{3},{4},{5},{6})"
                                         , order.Order_No
                                         , order.Details[i].Item_No
@@ -168,23 +171,23 @@ namespace TESTNeversitup.Dao
                                         , order.Details[i].Amount
                                         , order.Details[i].Total_Amount
                                         , order.Details[i].Vat);
+                            command.CommandText = sql;
                             command.ExecuteNonQuery();
-                            transaction.Commit();
+                            
                         }
+                        transaction.Commit();
+                        response.Status = 200;
+                        response.Description = "Created Order No : " + (order.Order_No).ToString() ;
                     }
-                    catch(Exception e)
+                    catch (Exception e)
                     {
                         transaction.Rollback();
-                        throw e;
+                        throw;
                     }
-
-                    response.Status = 200;
-                    response.Description = order.Order_No.ToString();
-
                 }
             }
             catch (Exception ex)
-            {             
+            {
                 response.Status = 999;
                 response.Description = ex.Message;
             }
